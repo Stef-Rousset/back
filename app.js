@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const userRoutes = require('.routes/user');
 
 require('dotenv').config();
 const mongoPassword = process.env.MONGOPASSWORD
@@ -21,8 +22,6 @@ app.use((req, res, next) => {
 //middleware global pour transfo le corps json des requetes en objets JS
 app.use(express.json());
 
-app.use((req, res) => {
-  res.json({message: 'connexion reussie'});
-})
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
