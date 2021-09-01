@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const userRoutes = require('.routes/user');
+const userRoutes = require('./routes/user');
+const path = require('path');
 
 require('dotenv').config();
 const mongoPassword = process.env.MONGOPASSWORD
@@ -21,7 +22,9 @@ app.use((req, res, next) => {
 });
 //middleware global pour transfo le corps json des requetes en objets JS
 app.use(express.json());
-
+//images
+app.use('/images', express.static(path.join(__dirname, 'images')));
+// routes
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
