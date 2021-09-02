@@ -7,9 +7,10 @@ const path = require('path');
 
 require('dotenv').config();
 const mongoPassword = process.env.MONGOPASSWORD
+const mongoUsername = process.env.MONGOUSERNAME
 
 //connexion à mongoDB
-mongoose.connect(`mongodb+srv://stephanie:${mongoPassword}@clusteroc.mmc8w.mongodb.net/piiquante?retryWrites=true&w=majority` ,
+mongoose.connect(`mongodb+srv://${mongoUsername}:${mongoPassword}@clusteroc.mmc8w.mongodb.net/piiquante?retryWrites=true&w=majority` ,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -27,6 +28,6 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 // routes
 app.use('/api/auth', userRoutes);
-app.use('api/sauces', sauceRoutes);
+app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;
