@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const app = express();
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+// protect http headers
+app.use(helmet());
 //middleware global pour transfo le corps json des requetes en objets JS
 app.use(express.json());
 //images

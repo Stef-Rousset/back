@@ -1,19 +1,34 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const passwordValidator = require('password-validator');
+
+schema
+.is().min(6)        // min 6 caractères
+.is().max(30)       // max 30 caractères
+.has().uppercase(1)  // au moins 1 maj
+.has().lowercase(1)  // au moins 1 min
+.has().digits(1)     // au moins 1 chiffre
+.has().symbols(1)     // au moins 1 symbole
+.has().not().spaces() // pas d'espace
+
 
 exports.signup = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10) //hashage du password
-        .then(hash => {
-          const user = new User({
-            email: req.body.email,
-            password: hash,
-          });
-          user.save() //enregistrement ds db
-              .then(() => res.status(201).json({ message: 'User created'}))
-              .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
+  if (schema.validate(req.body.password)) {
+      bcrypt.hash(req.body.password, 10) //hashage du password
+            .then(hash => {
+              const user = new User({
+                email: req.body.email,
+                password: hash,
+              });
+              user.save() //enregistrement ds db
+                  .then(() => res.status(201).json({ message: 'User created'}))
+                  .catch(error => res.status(400).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+  } else {
+     alert("password must be 6 to 30 length, and have at least one uppercase, one lowercase, one digit, one symbol and no space");
+  }
 };
 
 exports.login = (req, res, next) => {
@@ -31,7 +46,7 @@ exports.login = (req, res, next) => {
                   userId: user._id,
                   token: jwt.sign(      // encodage du token
                     { userId: user._id },
-                    'RANDOM_TOKEN_SECRET',
+                    process.env.TOKENSECRET,
                     { expiresIn: '24h' },
                     )
                   })
