@@ -3,18 +3,19 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const passwordValidator = require('password-validator');
 
+var schema = new passwordValidator();
 schema
 .is().min(6)        // min 6 caractères
 .is().max(30)       // max 30 caractères
 .has().uppercase(1)  // au moins 1 maj
 .has().lowercase(1)  // au moins 1 min
 .has().digits(1)     // au moins 1 chiffre
-.has().symbols(1)     // au moins 1 symbole
 .has().not().spaces() // pas d'espace
 
 
 exports.signup = (req, res, next) => {
-  if (schema.validate(req.body.password)) {
+  if (schema.validate(req.body.password) === true) {
+    console.log('bla');
       bcrypt.hash(req.body.password, 10) //hashage du password
             .then(hash => {
               const user = new User({
@@ -27,7 +28,7 @@ exports.signup = (req, res, next) => {
             })
             .catch(error => res.status(500).json({ error }));
   } else {
-     alert("password must be 6 to 30 length, and have at least one uppercase, one lowercase, one digit, one symbol and no space");
+    console.log('pb');
   }
 };
 
