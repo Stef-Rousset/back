@@ -15,7 +15,6 @@ schema
 
 exports.signup = (req, res, next) => {
   if (schema.validate(req.body.password) === true) {
-    console.log('bla');
       bcrypt.hash(req.body.password, 10) //hashage du password
             .then(hash => {
               const user = new User({
@@ -28,7 +27,7 @@ exports.signup = (req, res, next) => {
             })
             .catch(error => res.status(500).json({ error }));
   } else {
-    console.log('pb');
+    res.send('Incorrect password');
   }
 };
 
