@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const rateLimit = require("express-rate-limit");
 const app = express();
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
@@ -23,6 +24,12 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+// protection againt force attack
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 // protect http headers
 app.use(helmet());
 //middleware global pour transfo le corps json des requetes en objets JS

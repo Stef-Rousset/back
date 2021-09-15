@@ -27,7 +27,8 @@ exports.signup = (req, res, next) => {
             })
             .catch(error => res.status(500).json({ error }));
   } else {
-    res.send('Incorrect password');
+    res.json({ message: 'Incorrect password' });
+
   }
 };
 

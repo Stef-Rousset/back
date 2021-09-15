@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const sanitizerPlugin = require('mongoose-sanitizer');
 
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
@@ -13,5 +14,7 @@ const sauceSchema = mongoose.Schema({
   usersLiked: { type: Array, default: [] },
   usersDisliked: { type: Array, default: [] },
 })
+
+sauceSchema.plugin(sanitizerPlugin); // sanitize all the fields
 
 module.exports = mongoose.model('Sauce', sauceSchema);
