@@ -43,14 +43,12 @@ exports.likeSauce = (req, res, next) => {
   const sauce = Sauce.findOne({ _id: req.params.id })
                 .then(sauce => {
                       if (likeObject === 1){
-                        //&& !sauce.usersLiked.includes(userId)
                           Sauce.updateOne({ _id: req.params.id },
                                           { $push: { usersLiked: userId }, $inc: { likes: 1 } })
                                 .then(() => res.status(200).json({ message: 'Like status incremented !'}))
                                 .catch(error => res.status(400).json({ error }));
 
                       } else if (likeObject === -1){
-                        //&& !sauce.usersDisliked.includes(userId)
                           Sauce.updateOne({ _id: req.params.id },
                                           { $push: { usersDisliked: userId }, $inc: { dislikes: 1 } })
                                 .then(() => res.status(200).json({ message: 'Dislike status incremented !'}))
