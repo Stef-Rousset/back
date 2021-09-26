@@ -14,13 +14,29 @@ exports.createSauce = (req, res, next) => {
 }
 
 exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file ?
-    {
-      ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body };
-  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Sauce modified !'}))
+  //retrouver la sauce pour recup le filename
+  Sauce.findOne({ _id: req.params.id})
+    .then(sauce => {
+      const filename = sauce.imageUrl.split('/images/')[1];
+      const sauceObject = req.file ?
+          {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body };
+      //si fichier, on delete l'ancienne image puis on update
+      if (req.file){
+          fs.unlink(`images/${filename}`, () => {
+            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+              .then(() => res.status(200).json({ message: 'Sauce modified !'}))
+              .catch(error => res.status(400).json({ error }));
+          })
+      // si pas de fichier, on update sans delete l'ancienne image
+      }else {
+          Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+            .then(() => res.status(200).json({ message: 'Sauce modified !'}))
+            .catch(error => res.status(400).json({ error }));
+      }
+    })
     .catch(error => res.status(400).json({ error }));
 }
 
