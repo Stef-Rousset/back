@@ -8,13 +8,12 @@ const sauceRoutes = require('./routes/sauce');
 const path = require('path');
 
 require('dotenv').config();
-const db = process.env.DB
 const dbPassword = process.env.DBPASSWORD
 const dbUsername = process.env.DBUSERNAME
 const myDatabase = process.env.MYDATABASE
 
 //connexion à mongoDB
-mongoose.connect(`mongodb+srv://${dbUsername}:${dbPassword}@clusteroc.mmc8w.${db}.net/${myDatabase}?retryWrites=true&w=majority` ,
+mongoose.connect(`mongodb+srv://${dbUsername}:${dbPassword}@clusteroc.mmc8w.mongodb.net/${myDatabase}?retryWrites=true&w=majority` ,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
