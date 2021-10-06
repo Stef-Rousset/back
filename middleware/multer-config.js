@@ -12,8 +12,9 @@ const storage = multer.diskStorage({         //enregistrement des files ds dossi
     },
     filename: (req, file, callback) => {       // crée le nom du file
         const name = file.originalname.split(' ').join('_');
+        const finalName = name.split('.')[0];
         const extension = MIME_TYPES[file.mimetype];
-        callback(null, name + Date.now() + '.' + extension);
+        callback(null, finalName + Date.now() + '.' + extension);
     }
 });
 
