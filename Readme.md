@@ -31,3 +31,5 @@ your own identifiers:
 You will also need to set a secret key (=a long random string) to be used by jsonwebtoken
 - TOKENSECRET=<your long random string>
 
+As the content of the images folder is not sent to github, you will have to add a
+folder called `images` in this project to store the pictures of the sauces.
